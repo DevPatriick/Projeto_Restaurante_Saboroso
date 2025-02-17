@@ -1,14 +1,14 @@
 # **Projeto Restaurante Saboroso** 📱📞🍣🥘
 
 Este é o acompanhamento do progresso no curso de **Projeto Restaurante Saboroso**. 
-O curso tem um total de **50 aulas**, e atualmente estou na **aula 2**.
+O curso tem um total de **50 aulas**, e atualmente estou na **aula 3**.
 
 
 ## **Status do Curso**
 
 ### Progresso Atual  
-#### [█░░░░░░░░░░░░░░░░░░] **4%**  
-- Aulas concluídas: **2 de 50** 
+#### [█░░░░░░░░░░░░░░░░░░] **6%**  
+- Aulas concluídas: **3 de 50** 
 
 
 ## 📦 Pacotes Instalados
@@ -26,6 +26,9 @@ O curso tem um total de **50 aulas**, e atualmente estou na **aula 2**.
   }
 ```
 
+## 🗄 **Banco de Dados**  
+O projeto utiliza **MySQL 8** como banco de dados. 
+
 # 🔧 Como Rodar o Projeto
 
 1. **Clone o repositório:**
@@ -36,7 +39,7 @@ O curso tem um total de **50 aulas**, e atualmente estou na **aula 2**.
 2. **Instale as dependências:**
 
    ```bash
-npm install
+   npm install
 
 3. **Inicie o servidor de desenvolvimento:**
    ```bash
