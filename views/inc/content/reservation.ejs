@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="col-md-6 animate-box">
                     <h3>Reserva de mesa</h3>
-                    <form action="#">
+                    <form action="/reservations" method="post">
                         <div class="row form-group">
                             <div class="col-md-12">
                                 <label for="inputName">Nome</label>
@@ -32,6 +32,12 @@
                         </div>
                         <div class="row form-group">
                             <div class="col-md-12">
+                                <label for="inputTelephone">Número para contato</label>
+                                <input type="text" id="inputTelephone" name="telephone" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
                                 <label for="inputDate">Data</label>
                                 <input type="text" id="inputDate" name="date" class="form-control">
                             </div>
@@ -45,8 +51,7 @@
 
                         <div class="row form-group">
                             <div class="col-md-12">
-                                <input type="submit" class="btn btn-primary btn-block"
-                                    value="Reservar Agora">
+                                <input type="submit" class="btn btn-primary btn-block" value="Reservar Agora">
                             </div>
                         </div>
                     </form>
@@ -59,8 +64,7 @@
                             <li class="address">Rua Ademar Saraiva Leão, 234<br> Alvarenga, São Bernardo
                                 do Campo - SP</li>
                             <li class="phone"><a href="tel://1234567890">+1 234 567 890</a></li>
-                            <li class="email"><a
-                                    href="mailto:contato@hcode.com.br">contato@hcode.com.br</a></li>
+                            <li class="email"><a href="mailto:contato@hcode.com.br">contato@hcode.com.br</a></li>
                             <li class="url"><a href="https://www.hcode.com.br">Hcode.com.br</a></li>
                         </ul>
                     </div>
@@ -71,3 +75,96 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Capturar os valores dos inputs
+            const name = document.getElementById("inputName").value;
+            const email = document.getElementById("inputEmail").value;
+            const people = document.getElementById("inputPeople").value;
+            const telephone = document.getElementById("inputTelephone").value;
+            const date = document.getElementById("inputDate").value;
+            const time = document.getElementById("inputTime").value;
+
+            // Verificação dos campos
+            if (!name) {
+                Swal.fire({
+                    title: "Preencha todos os campos",
+                    text: "Digite o nome para reserva.",
+                    icon: "error"
+                })
+            } else if (!email) {
+                Swal.fire({
+                    title: "Preencha todos os campos",
+                    text: "Digite o e-mail para reserva.",
+                    icon: "error"
+                })
+            } else if (!people) {
+                Swal.fire({
+                    title: "Preencha todos os campos",
+                    text: "Selecione o número de pessoas para a reserva.",
+                    icon: "error"
+                })
+            } else if (!telephone) {
+                Swal.fire({
+                    title: "Preencha todos os campos",
+                    text: "Digite um numero para receber a reserva",
+                    icon: "error"
+                })
+            } else if (!date) {
+                Swal.fire({
+                    title: "Preencha todos os campos",
+                    text: "Digite a data da reserva.",
+                    icon: "error"
+                })
+            } else if (!time) {
+                Swal.fire({
+                    title: "Preencha todos os campos",
+                    text: "Digite a hora da reserva.",
+                    icon: "error"
+                })
+            } else {
+                Swal.fire({
+                    title: "Reserva Concluída",
+                    text: "Em instante você receberá uma mensagem com os dados da reserva",
+                    icon: "success"
+                })
+
+
+                // F5ac9cc7cd09c45589b98bc38d34407bbS
+
+                fetch("https://api.z-api.io/instances/3DD064B1598110379BD5E2D55401DB6C/token/1416C5AC7B5E8B9E1289C036/send-text", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "client-token": "F5ac9cc7cd09c45589b98bc38d34407bbS"
+                    },
+                    body: JSON.stringify({
+                        "phone": `+55${telephone}`,
+                        "message": `Olá ${name}, tudo bem? 😊.
+                        Sua reserva para o dia ${date} às ${time} foi CONFIRMADA. ✅
+                        Te aguardamos! 🕒🍽️`
+                    })
+                })
+                    .then(response => response.json()) // converte a resposta em JSON
+                    .then(data => {
+                        console.log(data); // Exibe os dados da resposta
+                    })
+                    .catch(err => {
+                        console.error("Erro:", err);
+                    });
+
+
+                setTimeout(() => {
+                    form.submit();
+                }, "4000");
+
+            }
+        });
+    });</script>
