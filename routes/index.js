@@ -1,21 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var connection = require('../inc/db')
+var menus = require('./../inc/menus')
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  connection.query(`SELECT * FROM tb_menus ORDER BY title`,
-    (err, results) => {
-      try {
-        res.render('index', {
-          title: 'Restaurante Saboroso!',
-          menus: results
-        });
-      } catch (err) {
-        res.send(err)
-      }
-    }
-  )
+
+  menus.getMenus().then(results=>{
+    res.render('index', {
+      title: 'Restaurante Saboroso!',
+      menus: results
+    })
+  })
+ 
 
 });
 
@@ -28,13 +25,15 @@ router.get('/contacts', function (req, res, next) {
 })
 
 router.get('/menus', function (req, res, next) {
-  res.render('menus',
-    {
+  menus.getMenus().then(results=>{
+    res.render('menus', {
       title: 'Menus',
       backgroud: 'images/img_bg_1.jpg',
-      h1: "Saboreie nosso menu!"
-    }
-  );
+      h1: "Saboreie nosso menu!",
+      menus: results
+    })
+  })
+
 })
 
 router.get('/reservations', function (req, res, next) {
