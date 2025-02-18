@@ -1,14 +1,14 @@
 # **Projeto Restaurante Saboroso** 📱📞🍣🥘
 
 Este é o acompanhamento do progresso no curso de **Projeto Restaurante Saboroso**. 
-O curso tem um total de **50 aulas**, e atualmente estou na **aula 10**.
+O curso tem um total de **50 aulas**, e atualmente estou na **aula 11 (parte 1)**.
 
 
 ## **Status do Curso**
 
 ### Progresso Atual  
-#### [█░░░░░░░░░░░░░░░░░░] **20%**  
-- Aulas concluídas: **10 de 50** 
+#### [██████░░░░░░░░░░░░░░░] **21%**  
+- Aulas concluídas: **11(parte 1) de 50** 
 
 
 ## 📦 Pacotes Instalados
@@ -23,7 +23,8 @@ O curso tem um total de **50 aulas**, e atualmente estou na **aula 10**.
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "mysql2": "^1.7.0"
+    "mysql2": "^1.7.0",
+    "sweetalert2": "^11.17.2"
   }
 ```
 
