@@ -58,13 +58,17 @@ router.post('/reservations', (req, res)=> {
     error = "Digite a data da reserva";
   } else if (!req.body.time) {
     error = "Digite a hora da reserva";
+  } else{
+    reservations.save(req.body).then(results=>{
+      reservations.render(req, res);
+    })
   }
 
   if (error) {
     return res.json({ success: false, message: error });
   }
 
-  reservations.render(req, res);
+  
 });
 
 
