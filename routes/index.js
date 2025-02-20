@@ -1,51 +1,65 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var connection = require('../inc/db')
-var menus = require('./../inc/menus');
-const Swal = require('sweetalert2');
+var connection = require("../inc/db");
+var menus = require("./../inc/menus");
+const Swal = require("sweetalert2");
 
-const reservations = require('./../inc/reservations');
+const reservations = require("./../inc/reservations");
+const contacts = require("./../inc/contacts");
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get("/", function (req, res, next) {
+  menus.getMenus().then((results) => {
+    res.render("index", {
+      title: "Restaurante Saboroso!",
+      menus: results,
+    });
+  });
+});
 
-  menus.getMenus().then(results=>{
-    res.render('index', {
-      title: 'Restaurante Saboroso!',
-      menus: results
-    })
-  })
- 
+router.get("/contacts", function (req, res, next) {
+  contacts.render(req, res);
+});
+
+router.post("/contacts", (req, res) => {
+  let error = null;
+
+  if (!req.body.name) {
+    error = "Digite o nome";
+  } else if(!req.body.telephone){
+    error = "Digite o telefone"
+  } else if (!req.body.email) {
+    error = "Digite o email";
+  } else if (!req.body.message) {
+    error = "Digite algo";
+  } else {
+    contacts.save(req.body).then((results) => {
+      contacts.render(req, res);
+    });
+  }
+
+  if (error) {
+    return res.json({ success: false, message: error });
+  }
 
 });
 
-router.get('/contacts', function (req, res, next) {
-  res.render('contacts', {
-    title: 'Contatos',
-    backgroud: 'images/img_bg_3.jpg',
-    h1: "Diga um oi!"
-  });
-})
-
-router.get('/menus', function (req, res, next) {
-  menus.getMenus().then(results=>{
-    res.render('menus', {
-      title: 'Menus',
-      backgroud: 'images/img_bg_1.jpg',
+router.get("/menus", function (req, res, next) {
+  menus.getMenus().then((results) => {
+    res.render("menus", {
+      title: "Menus",
+      backgroud: "images/img_bg_1.jpg",
       h1: "Saboreie nosso menu!",
-      menus: results
-    })
-  })
+      menus: results,
+    });
+  });
+});
 
-})
-
-router.get('/reservations', function (req, res, next) {
-
+router.get("/reservations", function (req, res, next) {
   reservations.render(req, res);
+});
 
-})
-
-router.post('/reservations', (req, res)=> {
+router.post("/reservations", (req, res) => {
   let error = null;
 
   if (!req.body.name) {
@@ -58,26 +72,23 @@ router.post('/reservations', (req, res)=> {
     error = "Digite a data da reserva";
   } else if (!req.body.time) {
     error = "Digite a hora da reserva";
-  } else{
-    reservations.save(req.body).then(results=>{
+  } else {
+    reservations.save(req.body).then((results) => {
       reservations.render(req, res);
-    })
+    });
   }
 
   if (error) {
     return res.json({ success: false, message: error });
   }
-
-  
 });
 
-
-router.get('/services', function (req, res, next) {
-  res.render('services', {
-    title: 'Serviços',
-    backgroud: 'images/img_bg_1.jpg',
-    h1: "É um prazer poder servir!"
+router.get("/services", function (req, res, next) {
+  res.render("services", {
+    title: "Serviços",
+    backgroud: "images/img_bg_1.jpg",
+    h1: "É um prazer poder servir!",
   });
-})
+});
 
 module.exports = router;

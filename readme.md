@@ -7,8 +7,11 @@ O curso tem um total de **50 aulas**, e atualmente estou na **aula 11**.
 ## **Status do Curso**
 
 ### Progresso Atual  
-#### [██████░░░░░░░░░░░░░░░] **22%**  
-- Aulas concluídas: **11 de 50** 
+#### [██████░░░░░░░░░░░░░░░] **24%**  
+- Aulas concluídas: **12 de 50** 
+
+https://api.mailersend.com/v1/
+mlsn.6eccb477eb2d759b79195fec8e3c7ad858aa6603cb73cc36e6766173c35bfcac
 
 
 ## 📦 Pacotes Instalados

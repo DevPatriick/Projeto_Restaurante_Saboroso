@@ -84,7 +84,7 @@
         form.addEventListener("submit", function (event) {
             event.preventDefault();
 
-            // Capturar os valores dos inputs
+            
             const name = document.getElementById("inputName").value;
             const email = document.getElementById("inputEmail").value;
             const people = document.getElementById("inputPeople").value;
@@ -92,7 +92,7 @@
             const date = document.getElementById("inputDate").value;
             const time = document.getElementById("inputTime").value;
 
-            // Verificação dos campos
+            
             if (!name) {
                 Swal.fire({
                     title: "Preencha todos os campos",
@@ -152,9 +152,9 @@
                         Te aguardamos! 🕒🍽️`
                     })
                 })
-                    .then(response => response.json()) // converte a resposta em JSON
+                    .then(response => response.json()) 
                     .then(data => {
-                        console.log(data); // Exibe os dados da resposta
+                        console.log(data); 
                     })
                     .catch(err => {
                         console.error("Erro:", err);

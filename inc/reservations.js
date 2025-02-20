@@ -15,9 +15,8 @@ module.exports = {
 
   save(fields) {
     return new Promise((resolve, reject) => {
-
-        let date = fields.date.split('/');
-        fields.date = `${date[2]}-${date[1]}-${date[0]}` 
+      let date = fields.date.split("/");
+      fields.date = `${date[2]}-${date[1]}-${date[0]}`;
 
       connection.query(
         `
@@ -33,12 +32,12 @@ module.exports = {
           fields.telephone,
         ],
         (error, results) => {
-            if(error){
-                console.log(error)
-                reject(error)
-            } else{
-                resolve(results)
-            }
+          if (error) {
+            console.log(error);
+            reject(error);
+          } else {
+            resolve(results);
+          }
         }
       );
     });
