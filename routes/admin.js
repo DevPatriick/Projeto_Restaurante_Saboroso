@@ -1,4 +1,5 @@
 var express = require("express");
+const users = require("../inc/users");
 var router = express.Router();
 
 router.get("/", function (req, res, next) {
@@ -6,10 +7,24 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/login", function (req, res, next) {
-  if(!req.session.views)  req.session.views = 0;
-  console.log(++req.session.views)
-  res.render("admin/login", {});
+  users.render(req, res);
+});
 
+router.post("/login", function (req, res, next) {
+  const { email, password } = req.body;
+  if (!email) {
+    users.render(req, res, false, "E-mail inválido");
+  } else if (!password) {
+    users.render(req, res, false, "Senha incorreta");
+  } else {
+    users.login(email, password).then((user) => {
+        req.session.user = user;
+        res.redirect("/admin");
+      })
+      .catch((err) => {
+        users.render(req, res, false, err.message || err);
+      });
+  }
 });
 
 router.get("/emails", function (req, res, next) {
@@ -26,12 +41,12 @@ router.get("/contacts", function (req, res, next) {
 
 router.get("/reservations", function (req, res, next) {
   res.render("admin/reservations", {
-    date:{}
+    date: {},
   });
 });
 
 router.get("/users", function (req, res, next) {
-    res.render("admin/users", {});
-  });
+  res.render("admin/users", {});
+});
 
 module.exports = router;
