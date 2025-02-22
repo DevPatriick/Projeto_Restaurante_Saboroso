@@ -2,6 +2,22 @@ var express = require("express");
 const users = require("../inc/users");
 var router = express.Router();
 
+router.use(function (req, res, next) {
+
+  if(['/login'].indexOf(req.url) === -1 && !req.session.user){
+    res.redirect("/admin/login");
+  } else{
+    next()
+  }
+
+});
+
+router.get("/logout", function(req, res, next){
+  delete req.session.user;
+
+  res.redirect("/admin/login");
+})
+
 router.get("/", function (req, res, next) {
   res.render("admin/index", {});
 });
@@ -17,7 +33,9 @@ router.post("/login", function (req, res, next) {
   } else if (!password) {
     users.render(req, res, false, "Senha incorreta");
   } else {
-    users.login(email, password).then((user) => {
+    users
+      .login(email, password)
+      .then((user) => {
         req.session.user = user;
         res.redirect("/admin");
       })
