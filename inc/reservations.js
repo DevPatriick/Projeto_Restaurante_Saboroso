@@ -2,12 +2,14 @@ const { fileLoader } = require("ejs");
 var connection = require("./db");
 
 module.exports = {
-  render(req, res, error) {
+  render(req, res, success, errorMessage) {
     res.render("reservations", {
       title: "Reservas",
       backgroud: "images/img_bg_2.jpg",
       h1: "Reserve uma Mesa!",
       body: req.body,
+      success,
+      errorMessage
     });
   },
 

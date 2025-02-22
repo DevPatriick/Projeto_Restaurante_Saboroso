@@ -81,9 +81,28 @@
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector("form");
 
+        const errorMessage = '<%= (errorMessage) %>'
+        const success = '<%= (success) %>'
+
+        if(errorMessage){
+            Swal.fire({
+                    title: "Error",
+                    text: errorMessage,
+                    icon: "error"
+                })
+        } 
+ 
+        if(success === 'true'){
+            Swal.fire({
+                    title: "Reserva Concluída",
+                    text: "Em instante você receberá uma mensagem com os dados da reserva",
+                    icon: "success"
+                })
+        }
+
         form.addEventListener("submit", function (event) {
             event.preventDefault();
-
+            
             
             const name = document.getElementById("inputName").value;
             const email = document.getElementById("inputEmail").value;
@@ -130,41 +149,7 @@
                     icon: "error"
                 })
             } else {
-                Swal.fire({
-                    title: "Reserva Concluída",
-                    text: "Em instante você receberá uma mensagem com os dados da reserva",
-                    icon: "success"
-                })
-
-
-                // F5ac9cc7cd09c45589b98bc38d34407bbS
-
-                fetch("https://api.z-api.io/instances/3DD064B1598110379BD5E2D55401DB6C/token/1416C5AC7B5E8B9E1289C036/send-text", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "client-token": "F5ac9cc7cd09c45589b98bc38d34407bbS"
-                    },
-                    body: JSON.stringify({
-                        "phone": `+55${telephone}`,
-                        "message": `Olá ${name}, tudo bem? 😊.
-                        Sua reserva para o dia ${date} às ${time} foi CONFIRMADA. ✅
-                        Te aguardamos! 🕒🍽️`
-                    })
-                })
-                    .then(response => response.json()) 
-                    .then(data => {
-                        console.log(data); 
-                    })
-                    .catch(err => {
-                        console.error("Erro:", err);
-                    });
-
-
-                setTimeout(() => {
-                    form.submit();
-                }, "4000");
-
+               form.submit();
             }
         });
     });</script>

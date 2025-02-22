@@ -3,6 +3,7 @@ var router = express.Router();
 var connection = require("../inc/db");
 var menus = require("./../inc/menus");
 const Swal = require("sweetalert2");
+const axios = require('axios');
 
 const reservations = require("./../inc/reservations");
 const contacts = require("./../inc/contacts");
@@ -61,21 +62,45 @@ router.get("/reservations", function (req, res, next) {
 
 router.post("/reservations", (req, res) => {
   let error = null;
+  const { name, email, people, date, time, telephone } = req.body
 
-  if (!req.body.name) {
+  if (!name) {
     error = "Digite o nome para reserva";
-  } else if (!req.body.email) {
+  } else if (!email) {
     error = "Digite o e-mail para reserva";
-  } else if (!req.body.people) {
+  } else if (!people) {
     error = "Digite para quantas pessoas será a reserva";
-  } else if (!req.body.date) {
+  } else if (!date) {
     error = "Digite a data da reserva";
-  } else if (!req.body.time) {
+  } else if (!time) {
     error = "Digite a hora da reserva";
+  } else if(!telephone){
+    error = "Telefone"
   } else {
-    reservations.save(req.body).then((results) => {
-      reservations.render(req, res);
-    });
+    reservations.save(req.body).then(async(results) => {
+
+      try {
+        await axios.post("https://api.z-api.io/instances/3DD064B1598110379BD5E2D55401DB6C/token/1416C5AC7B5E8B9E1289C036/send-text", {
+          "phone": `+55${telephone}`,
+          "message": `Olá ${name}, tudo bem? 😊.
+          Sua reserva para o dia ${date} às ${time} foi CONFIRMADA. ✅
+          Te aguardamos! 🕒🍽️`
+        }, {
+          headers: {
+              "Content-Type": "application/json",
+              "client-token": "F5ac9cc7cd09c45589b98bc38d34407bbS"
+          }
+        })
+      } catch (error) {
+        console.error(error)
+      }
+      
+    
+
+      reservations.render(req, res, true)
+    }).catch((err)=>{
+      reservations.render(req, res, false, err.message)
+    })
   }
 
   if (error) {
