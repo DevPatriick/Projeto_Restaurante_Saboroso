@@ -70,10 +70,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% results.forEach(function(row){ %>
-                  <tr data-row=" <%= JSON.stringify(results); %>"></tr>
-                  <tr>
-                    <td>1.</td>
+                  <% results.forEach(function(row){ %> 
+                    <tr data-row='<%= JSON.stringify(row) %>'>
+                    <td><%= row.id %></td>
                     <td>
                       <img
                         src="/<%= row.photo %>"
@@ -88,8 +87,6 @@
                       <button
                         type="button"
                         class="btn btn-xs btn-info btn-update"
-                        data-toggle="modal"
-                        data-target="#modal-update"
                       >
                         <i class="fa fa-pencil"></i> Editar</button
                       >&nbsp;<button
@@ -273,10 +270,57 @@
           body: formCreateData,
         })
           .then((response) => response.json())
-          .then(json =>{
-            window.location.reload()
+          .then((json) => {
+            window.location.reload();
           });
       });
+
+      let formUpdate = document.querySelector("#modal-update");
+
+      [...document.querySelectorAll(".btn-update")].forEach(btn => {
+        btn.addEventListener('click', e => {
+         let tr =  e.composedPath().find(el =>{
+            return (el.tagName.toUpperCase() === 'TR')
+          })
+
+          console.log(tr)
+          let data = JSON.parse(tr.dataset.row)
+          console.log(data)
+
+
+          for (let name in data) {
+            switch (name) {
+              case "photo":
+                break;
+
+              default:
+                let input = formUpdate.querySelector(`[name=${name}]`);
+                if (input) input.value = data[name];
+            }
+          }
+
+          $("#modal-update").modal("show");
+        });
+      });
+
+
+      // [...document.querySelectorAll(".btn-update")].forEach((btn) => {
+      //   btn.addEventListener("click", (e) => {
+      //     let tr = e
+      //       .composedPath()
+      //       .find((el) => el.tagName.toUpperCase() === "TR");
+
+      //     // Verifique se o 'data-row' existe antes de tentar fazer o parse
+      //     let data = tr.dataset.row ? JSON.parse(tr.dataset.row) : null;
+
+      //     if (data) {
+      //       console.log(data);
+      //       // Continue com o preenchimento do formulário e exibição do modal
+      //     } else {
+      //       console.log("data-row está vazio ou não encontrado.");
+      //     }
+      //   });
+      // });
     </script>
 
     <!-- jQuery 3 -->
