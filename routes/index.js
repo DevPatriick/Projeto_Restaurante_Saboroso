@@ -80,7 +80,7 @@ router.post("/reservations", (req, res) => {
     reservations.save(req.body).then(async(results) => {
 
       try {
-        await axios.post("https://api.z-api.io/instances/3DD064B1598110379BD5E2D55401DB6C/token/1416C5AC7B5E8B9E1289C036/send-text", {
+        await axios.post("https://api.z-api.io/instances/3DD3AC72A71C20CC0F4E9A31D728A9CF/token/1CDEB9060DC27A5935FBB492/send-text", {
           "phone": `+55${telephone}`,
           "message": `Olá ${name}, tudo bem? 😊.
           Sua reserva para o dia ${date} às ${time} foi CONFIRMADA. ✅
@@ -88,7 +88,7 @@ router.post("/reservations", (req, res) => {
         }, {
           headers: {
               "Content-Type": "application/json",
-              "client-token": "F5ac9cc7cd09c45589b98bc38d34407bbS"
+              "client-token": "F8ce8594579e94de2b8d2899369be25dbS"
           }
         })
       } catch (error) {
