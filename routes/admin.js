@@ -23,9 +23,12 @@ router.get("/logout", function (req, res, next) {
 });
 
 router.get("/", function (req, res, next) {
-  res.render("admin/index", {
-    menus: req.menus,
-    user: req.session.user,
+  admin.dashboard().then((data) => {
+    res.render("admin/index", {
+      menus: req.menus,
+      user: req.session.user,
+      data
+    });
   });
 });
 
