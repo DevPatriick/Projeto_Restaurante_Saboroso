@@ -25,6 +25,40 @@
     <meta name="author" content="Hcode.com.br" />
     <meta name="theme-color" content="#3c8dbc" />
   </head>
+  <style>
+    .confirm-delete {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #72afd2;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      width: 300px;
+      border: 2px solid black;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .confirm-btn {
+      background-color: red;
+      color: white;
+    }
+
+    .cancel-btn {
+      background-color: green;
+      color: white;
+    }
+  </style>
 
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -255,6 +289,12 @@
         <!-- /.modal-dialog -->
       </div>
 
+      <div class="confirm-delete" id="confirmDelete">
+        <p>Você realmente quer excluir o menu?</p>
+        <button class="confirm-btn" id="confirmYes">Sim</button>
+        <button class="cancel-btn" id="confirmNo">Não</button>
+      </div>
+
       <%- include("./inc/footer") -%>
     </div>
     <script src="/js/hcode-filereader.js"></script>
@@ -265,20 +305,26 @@
 
       let formCreate = document.querySelector("#modal-create form");
 
-      formCreate.save().then(json => {
-        console.log(JSON.stringify(json));
-        window.location.reload();
-      }).catch(err=>{
-        console.error(err)
-      });
+      formCreate
+        .save()
+        .then((json) => {
+          console.log(JSON.stringify(json));
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
 
       let formUpdate = document.querySelector("#modal-update form");
 
-      formUpdate.save().then((json)=>{
-        window.location.reload();
-      }).catch(err=>{
-        console.error(err)
-      });
+      formUpdate
+        .save()
+        .then((json) => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
 
       [...document.querySelectorAll(".btn-update")].forEach((btn) => {
         btn.addEventListener("click", (e) => {
@@ -303,6 +349,48 @@
           }
 
           $("#modal-update").modal("show");
+        });
+      });
+
+
+      // delete
+      [...document.querySelectorAll(".btn-delete")].forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          let tr = e.composedPath().find((el) => {
+            return el.tagName.toUpperCase() === "TR";
+          });
+
+          const confirmDelete = document.getElementById("confirmDelete");
+          confirmDelete.style.display = "block";
+
+          const deleteMenu = document.getElementById("confirmYes")
+
+          console.log(tr);
+          let data = JSON.parse(tr.dataset.row);
+          console.log(data);
+
+          const notConfirm = document.getElementById("confirmNo")
+
+          notConfirm.addEventListener("click", e=>{
+            confirmDelete.style.display = "none";
+            window.location.reload();
+          })
+
+          deleteMenu.addEventListener("click", (e) => {
+            // let msg = `Você realmente quer excluir o menu ${data.name} `
+            fetch(`/admin/menus/${data.id}`, {
+              method: "DELETE",
+            })
+              .then((response) => {
+                response.json();
+              })
+              .then((json) => {
+                console.log(json);
+                confirmDelete.style.display = "none";
+                window.location.reload();
+                // window.location.reload();
+              });
+          });
         });
       });
 
