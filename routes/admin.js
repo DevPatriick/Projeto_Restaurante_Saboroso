@@ -74,12 +74,15 @@ router.get("/menus", function (req, res, next) {
 });
 
 router.post("/menus", function(req, res, next){
-  menus.save(req.fields, req.files).then(results=>{
-    res.send(results)
-  }).catch(err=>{
-    res.send(err)
-  })
-})
+  menus.saver(req.fields, req.files)
+    .then(results => {
+      res.send({ success: true, results: results });
+    })
+    .catch(err => {
+      res.status(500).send({ success: false, error: err.message });
+    });
+});
+
 
 router.get("/contacts", function (req, res, next) {
   res.render("admin/contacts", { menus: req.menus, user: req.session.user });

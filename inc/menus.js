@@ -15,7 +15,7 @@ module.exports = { getMenus(){
           )
     });
 },
-save(fields, files) {
+saver(fields, files) {
   return new Promise((resolve, reject) => {
 
     fields.photo = 'images/' + path.parse(files.photo.path).base;
