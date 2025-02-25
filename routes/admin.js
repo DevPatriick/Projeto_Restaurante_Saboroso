@@ -38,7 +38,8 @@ router.get("/login", function (req, res, next) {
 });
 
 router.post("/login", function (req, res, next) {
-  const { email, password } = req.body;
+  const { email, password } = req.body; 
+
   if (!email) {
     users.render(req, res, false, "E-mail inválido");
   } else if (!password) {
@@ -55,6 +56,7 @@ router.post("/login", function (req, res, next) {
       });
   }
 });
+
 
 router.get("/emails", function (req, res, next) {
   res.render("admin/emails", {
