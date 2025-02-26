@@ -3,6 +3,23 @@ var connection = require("./db");
 // const { param } = require("../routes");
 
 module.exports = {
+
+  delete(id) {
+    return new Promise((resolve, reject) => {
+      connection.query(`
+        DELETE FROM tb_reservations
+        WHERE id = ?`, [
+          id
+        ], (err, results)=>{
+          if(err){
+            reject(err)
+          } else{
+            resolve(results)
+          }
+        })
+    });
+  },
+
   render(req, res, success, errorMessage) {
     res.render("reservations", {
       title: "Reservas",
