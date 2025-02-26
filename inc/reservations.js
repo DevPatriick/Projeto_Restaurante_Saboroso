@@ -14,6 +14,21 @@ module.exports = {
     });
   },
 
+  getReservations() {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM tb_reservations ORDER BY date DESC`,
+        (err, results) => {
+          try {
+            resolve(results);
+          } catch (err) {
+            reject(err);
+          }
+        }
+      );
+    });
+  },
+
   save(fields) {
     return new Promise((resolve, reject) => {
       console.log(fields);

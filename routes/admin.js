@@ -98,11 +98,9 @@ router.get("/contacts", function (req, res, next) {
 });
 
 router.get("/reservations", function (req, res, next) {
-  res.render("admin/reservations", {
-    date: {},
-    menus: req.menus,
-    user: req.session.user,
-  });
+  reservations.getReservations().then((results)=>{
+    res.render("admin/reservations", { menus: req.menus, user: req.session.user, results });
+  })
 });
 
 router.post("/reservations", function(req, res, next){
