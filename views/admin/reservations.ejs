@@ -392,7 +392,12 @@
 
       new HcodeGrid({
          deleteURL: '/admin/reservations/${data.id}',
-         deleteMessage: 'Você realmente quer excluir a reserva de ${data.name}?'
+         deleteMessage: 'Você realmente quer excluir a reserva de ${data.name}?',
+         listerners: {
+          afterUpdateClick: (e)=>{
+            // $("#modal-update").modal("show");
+          }
+         }
       })
       
     </script>

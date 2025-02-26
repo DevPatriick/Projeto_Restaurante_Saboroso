@@ -299,120 +299,16 @@
     </div>
     <script src="/js/hcode-filereader.js"></script>
     <script src="/js/hcode-formsave.js"></script>
+    <script src="/js/hcode-grid.js"></script>
     <script>
       new HcodeFileReader("#modal-create [type=file]", "#modal-create img");
       new HcodeFileReader("#modal-update [type=file]", "#modal-update img");
 
-      let formCreate = document.querySelector("#modal-create form");
 
-      formCreate
-        .save()
-        .then((json) => {
-          console.log(JSON.stringify(json));
-          window.location.reload();
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      let formUpdate = document.querySelector("#modal-update form");
-
-      formUpdate
-        .save()
-        .then((json) => {
-          window.location.reload();
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      [...document.querySelectorAll(".btn-update")].forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          let tr = e.composedPath().find((el) => {
-            return el.tagName.toUpperCase() === "TR";
-          });
-
-          console.log(tr);
-          let data = JSON.parse(tr.dataset.row);
-          console.log(data);
-
-          for (let name in data) {
-            switch (name) {
-              case "photo":
-                formUpdate.querySelector("img").src = "/" + data[name];
-                break;
-
-              default:
-                let input = formUpdate.querySelector(`[name=${name}]`);
-                if (input) input.value = data[name];
-            }
-          }
-
-          $("#modal-update").modal("show");
-        });
-      });
-
-      // delete
-      [...document.querySelectorAll(".btn-delete")].forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          let tr = e.composedPath().find((el) => {
-            return el.tagName.toUpperCase() === "TR";
-          });
-
-          const confirmDelete = document.getElementById("confirmDelete");
-          confirmDelete.style.display = "block";
-
-          const deleteMenu = document.getElementById("confirmYes");
-
-          console.log(tr);
-          let data = JSON.parse(tr.dataset.row);
-          console.log(data);
-
-          const notConfirm = document.getElementById("confirmNo");
-
-          const confirmMessage = confirmDelete.querySelector("p");
-          confirmMessage.textContent = `Você realmente quer excluir o menu ${data.title}?`;
-
-          notConfirm.addEventListener("click", (e) => {
-            confirmDelete.style.display = "none";
-            window.location.reload();
-          });
-
-          deleteMenu.addEventListener("click", (e) => {
-            // let msg = `Você realmente quer excluir o menu ${data.name} `
-            fetch(`/admin/menus/${data.id}`, {
-              method: "DELETE",
-            })
-              .then((response) => {
-                response.json();
-              })
-              .then((json) => {
-                console.log(json);
-                confirmDelete.style.display = "none";
-                window.location.reload();
-                // window.location.reload();
-              });
-          });
-        });
-      });
-
-      // [...document.querySelectorAll(".btn-update")].forEach((btn) => {
-      //   btn.addEventListener("click", (e) => {
-      //     let tr = e
-      //       .composedPath()
-      //       .find((el) => el.tagName.toUpperCase() === "TR");
-
-      //     // Verifique se o 'data-row' existe antes de tentar fazer o parse
-      //     let data = tr.dataset.row ? JSON.parse(tr.dataset.row) : null;
-
-      //     if (data) {
-      //       console.log(data);
-      //       // Continue com o preenchimento do formulário e exibição do modal
-      //     } else {
-      //       console.log("data-row está vazio ou não encontrado.");
-      //     }
-      //   });
-      // });
+      new HcodeGrid({
+         deleteURL: '/admin/menus/${data.id}',
+         deleteMessage: 'Você realmente quer excluir o menu ${data.name}?'
+      })
     </script>
 
     <!-- jQuery 3 -->
