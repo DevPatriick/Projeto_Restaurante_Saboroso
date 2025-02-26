@@ -1,14 +1,14 @@
 # **Projeto Restaurante Saboroso** 📱📞🍣🥘
 
 Este é o acompanhamento do progresso no curso de **Projeto Restaurante Saboroso**. 
-O curso tem um total de **50 aulas**, e atualmente estou na **aula 29**.
+O curso tem um total de **50 aulas**, e atualmente estou na **aula 30**.
 
 
 ## **Status do Curso**
 
 ### Progresso Atual  
-#### [██████░░░░░░░░░░░░░░░] **58%**  
-- Aulas concluídas: **29 de 50**
+#### [██████░░░░░░░░░░░░░░░] **60%**  
+- Aulas concluídas: **30 de 50**
 
 ## Projeto Rodando pelo Ngrok
 

@@ -1,5 +1,6 @@
-const { fileLoader } = require("ejs");
+// const { fileLoader } = require("ejs");
 var connection = require("./db");
+// const { param } = require("../routes");
 
 module.exports = {
   render(req, res, success, errorMessage) {
@@ -9,30 +10,50 @@ module.exports = {
       h1: "Reserve uma Mesa!",
       body: req.body,
       success,
-      errorMessage
+      errorMessage,
     });
   },
 
-  // função para inserir no bando de dados
-
   save(fields) {
     return new Promise((resolve, reject) => {
-      let date = fields.date.split("/");
-      fields.date = `${date[2]}-${date[1]}-${date[0]}`;
+      console.log(fields);
+      if(fields.date.indexOf('/') > -1 ){
+        let date = fields.date.split("/");
+        fields.date = `${date[2]}-${date[1]}-${date[0]}`;
+      }
+      
 
-      connection.query(
-        `
-            INSERT INTO tb_reservations (name, email, people, date, time, telephone)
-            VALUE(?,?,?,?,?,?)
-            `,
-        [
+      let query,
+        params = [
           fields.name,
           fields.email,
           fields.people,
           fields.date,
           fields.time,
           fields.telephone,
-        ],
+        ];
+
+      if (parseInt(fields.id) > 0) {
+        (query = `
+          UPDATE tb_reservations
+          SET
+             name = ?,
+             email = ?, 
+             people = ?,
+             date = ?, 
+             time = ?, 
+             telephone = ?
+          WHERE id = ?
+        `),
+          params.push(fields.id);
+      } else {
+       query = `
+            INSERT INTO tb_reservations (name, email, people, date, time, telephone)
+            VALUE(?,?,?,?,?,?)
+            `
+      }
+
+      connection.query(query, params,
         (error, results) => {
           if (error) {
             console.log(error);

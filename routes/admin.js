@@ -2,7 +2,8 @@ var express = require("express");
 const users = require("../inc/users");
 var router = express.Router();
 var admin = require("./../inc/admin");
-var menus = require("./../inc/menus")
+var menus = require("./../inc/menus");
+var reservations = require('./../inc/reservations')
 
 router.use(function (req, res, next) {
   if (["/login"].indexOf(req.url) === -1 && !req.session.user) {
@@ -103,6 +104,49 @@ router.get("/reservations", function (req, res, next) {
     user: req.session.user,
   });
 });
+
+router.post("/reservations", function(req, res, next){
+  console.log("Campos recebidos:", req.fields); // Verificar os dados
+
+  if (!req.fields) {
+    return res.status(400).send({ success: false, error: "Nenhum dado enviado!" });
+  }
+
+  const { name, email, people, date, time, telephone } = req.fields;
+
+  reservations.save(req.fields, req.files)
+    .then(async results => {
+      res.send({ success: true, results: results });
+
+      try {
+        await axios.post("https://api.z-api.io/instances/3DD3AC72A71C20CC0F4E9A31D728A9CF/token/1CDEB9060DC27A5935FBB492/send-text", {
+          "phone": `+55${telephone}`,
+          "message": `Olá ${name}, tudo bem? 😊.
+          Sua reserva para o dia ${date} às ${time} foi CONFIRMADA. ✅
+          Te aguardamos! 🕒🍽️`
+        }, {
+          headers: {
+            "Content-Type": "application/json",
+            "client-token": "F8ce8594579e94de2b8d2899369be25dbS"
+          }
+        });
+      } catch (error) {
+        console.error("Erro ao enviar mensagem:", error);
+      }
+    })
+    .catch(err => {
+      res.status(500).send({ success: false, error: err.message });
+    });
+});
+
+
+router.delete("/reservations/:id", function(req, res, next){
+  reservations.delete(req.params.id).then(results=>{
+    res.send(results)
+  }).catch(err=>{
+    res.send(err)
+  })
+})
 
 router.get("/users", function (req, res, next) {
   res.render("admin/users", { menus: req.menus, user: req.session.user });
