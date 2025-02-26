@@ -116,7 +116,7 @@ class HcodeGrid {
             .then((json) => {
               console.log(json);
               confirmDelete.style.display = "none";
-              window.location.reload();
+              this.fireEvent('afterDeleteClick');
               // window.location.reload();
             });
         });

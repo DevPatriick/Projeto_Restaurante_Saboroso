@@ -396,7 +396,10 @@
          listerners: {
           afterUpdateClick: (e)=>{
             // $("#modal-update").modal("show");
-          }
+          },
+          afterDeleteClick: (e)=>{
+            window.location.reload();
+          },
          }
       })
       
