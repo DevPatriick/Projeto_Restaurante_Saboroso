@@ -35,40 +35,53 @@ module.exports = {
   },
   saver(fields, files) {
     return new Promise((resolve, reject) => {
-      fields.photo = "images/" + path.parse(files.photo.path).base;
+        let query, params;
 
-      let query,
-        queryPhoto = "",
-        params = [fields.title, fields.description, fields.price];
+        // Verifica se um novo arquivo foi enviado
+        let hasNewPhoto = files.photo && files.photo.name;
+        let photoPath = hasNewPhoto ? "images/" + path.parse(files.photo.path).base : null;
 
-      if (files.photo.name) {
-        queryPhoto = ",photo = ?";
-        params.push(fields.photo);
-      }
+        if (parseInt(fields.id) > 0) {
+            // Atualizando um registro existente
+            connection.query(`SELECT photo FROM tb_menus WHERE id = ?`, [fields.id], (err, results) => {
+                if (err) return reject(err);
+                
+                let currentPhoto = results.length > 0 ? results[0].photo : null;
+                let finalPhoto = hasNewPhoto ? photoPath : currentPhoto;
 
-      if (parseInt(fields.id) > 0) {
-        params.push(fields.id);
+                query = `
+                    UPDATE tb_menus
+                    SET title = ?, description = ?, price = ?, photo = ?
+                    WHERE id = ?
+                `;
 
-        query = `
-        UPDATE tb_menus
-        SET title = ?, description = ?, price = ?, photo = ?
-        WHERE id = ?
-            `;
-      } else {
-        if (!files.photo.name) {
-          reject("Envie a foto do prato");
-        }
-        query = ` INSERT INTO tb_menus (title, description, price, photo)
-        VALUES(?, ?, ?, ?)`;
-      }
+                params = [fields.title, fields.description, fields.price, finalPhoto, fields.id];
 
-      connection.query(query, params, (err, results) => {
-        if (err) {
-          reject(err);
+                connection.query(query, params, (err, results) => {
+                    if (err) reject(err);
+                    else resolve(results);
+                });
+            });
+
         } else {
-          resolve(results);
+            // Inserindo um novo registro
+            if (!hasNewPhoto) {
+                return reject("Envie a foto do prato");
+            }
+
+            query = `
+                INSERT INTO tb_menus (title, description, price, photo)
+                VALUES (?, ?, ?, ?)
+            `;
+
+            params = [fields.title, fields.description, fields.price, photoPath];
+
+            connection.query(query, params, (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
         }
-      });
     });
-  },
+}
+
 };

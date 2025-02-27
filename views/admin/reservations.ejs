@@ -393,13 +393,27 @@
       new HcodeGrid({
          deleteURL: '/admin/reservations/${data.id}',
          deleteMessage: 'Você realmente quer excluir a reserva de ${data.name}?',
-         listerners: {
-          afterUpdateClick: (e)=>{
+         listeners: {
+          beforeUpdateClick: (e)=>{
             // $("#modal-update").modal("show");
           },
           afterDeleteClick: (e)=>{
             window.location.reload();
           },
+          onUpdateLoad: (formUpdate, name, data) => {
+            let input = formUpdate.querySelector(`[name=${name}]`);
+            if(input === 'file'){
+              return;
+            }
+            switch (name) {
+              case "date":
+                if (input)
+                  input.value = moment(data[name]).format("YYYY-MM-DD");
+                break;
+              default:
+                if (input) input.value = data[name];
+            }
+          }
          }
       })
       

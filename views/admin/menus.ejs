@@ -297,18 +297,44 @@
 
       <%- include("./inc/footer") -%>
     </div>
+
     <script src="/js/hcode-filereader.js"></script>
     <script src="/js/hcode-formsave.js"></script>
     <script src="/js/hcode-grid.js"></script>
+
     <script>
       new HcodeFileReader("#modal-create [type=file]", "#modal-create img");
       new HcodeFileReader("#modal-update [type=file]", "#modal-update img");
 
-
       new HcodeGrid({
-         deleteURL: '/admin/menus/${data.id}',
-         deleteMessage: 'Você realmente quer excluir o menu ${data.name}?'
-      })
+        deleteURL: "/admin/menus/${data.id}",
+        deleteMessage: "Você realmente quer excluir a reserva de ${data.title}?",
+        listeners: {
+          beforeUpdateClick: (e) => {
+            console.log("beforeUpdateClick");
+            $("#modal-update").modal("show");
+          },
+          afterDeleteClick: (e) => {
+            window.location.reload();
+          },
+          onUpdateLoad: (formUpdate, name, data) => {
+            let input = formUpdate.querySelector(`[name=${name}]`);
+            if (input) {
+              
+
+              switch (name) {
+                case "photo":
+                  console.log("Caminho da imagem:", data[name]);
+                  formUpdate.querySelector("img").src = "/" + data[name];
+                  break;
+
+                default:
+                  if (input) input.value = data[name];
+              }
+            }
+          },
+        },
+      });
     </script>
 
     <!-- jQuery 3 -->
