@@ -32,7 +32,7 @@ class HcodeGrid {
         .save()
         .then((json) => {
           console.log(json);
-          // window.location.reload();
+          window.location.reload();
         })
         .catch((err) => {
           console.error(err);
@@ -43,7 +43,7 @@ class HcodeGrid {
       this.formUpdate
         .save()
         .then((json) => {
-          // window.location.reload();
+          window.location.reload();
         })
         .catch((err) => {
           console.error(err);
