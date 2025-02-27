@@ -49,6 +49,26 @@ app.use("/admin/reservations", function (req, res, next) {
   }
 });
 
+app.use("/admin/users", function (req, res, next) {
+  if (req.method === "POST") {
+    let form = formidable.IncomingForm({
+      uploadDir: path.join(__dirname, "/public/images"),
+      keepExtensions: true,
+    });
+
+    form.parse(req, function (err, fields, files) {
+      if (err) {
+        return next(err);
+      }
+      req.fields = fields;
+      req.files = files;
+      next();
+    });
+  } else {
+    next();
+  }
+});
+
 
 
 // view engine setup

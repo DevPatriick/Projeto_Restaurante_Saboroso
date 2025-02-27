@@ -1,5 +1,5 @@
 var express = require("express");
-const users = require("../inc/users");
+var users = require("../inc/users");
 var router = express.Router();
 var admin = require("./../inc/admin");
 var menus = require("./../inc/menus");
@@ -149,8 +149,8 @@ router.delete("/reservations/:id", function(req, res, next){
 })
 
 router.get("/users", function (req, res, next) {
-  users.getUsers().then(data=>{
-    res.render("admin/users", admin.getParams(req, {data}));
+  users.getUsers().then(results=>{
+    res.render("admin/users", { menus: req.menus, user: req.session.user, results});
   })
   
 });

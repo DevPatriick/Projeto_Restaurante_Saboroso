@@ -38,7 +38,7 @@ module.exports = {
   getUsers() {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM tb_users ORDER BY title`,
+        `SELECT * FROM tb_users ORDER BY name`,
         (err, results) => {
           try {
             resolve(results);
