@@ -4,13 +4,14 @@ var router = express.Router();
 var admin = require("./../inc/admin");
 var menus = require("./../inc/menus");
 var path = require("path");
-var reservations = require('./../inc/reservations')
+// var reservations = require('./../inc/reservations');
 var formidable = require("formidable");
 var moment = require('moment');
 // const { rejects } = require("assert");
 moment.locale("pt-BR")
 var contacts = require('./../inc/contacts')
-var emails = require('./../inc/emails')
+var emails = require('./../inc/emails');
+var reservations = require('./../inc/reservations.js')
 
 router.use(function (req, res, next) {
   if (["/login"].indexOf(req.url) === -1 && !req.session.user) {
@@ -179,8 +180,15 @@ router.delete('/emails/:id', async (req, res, next) => {
 })
 
 router.get("/reservations", function (req, res, next) {
-  reservations.getReservations().then((results)=>{
-    res.render("admin/reservations", { menus: req.menus, user: req.session.user, results, moment });
+
+  let start = (req.query.start) ? req.query.start : moment().subtract(1, "year").format('YYYY-MM-DD')
+  let end = (req.query.start) ? req.query.start : moment().format('YYYY-MM-DD')
+  reservations.getReservations(
+    req
+  ).then((pag)=>{
+    res.render("admin/reservations", { menus: req.menus, user: req.session.user, results, moment, date: {
+      start, end
+    }, data: pag.data, moment, links: pag.links });
   })
 });
 
