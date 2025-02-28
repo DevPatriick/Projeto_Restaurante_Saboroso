@@ -15,6 +15,41 @@
     <meta name="theme-color" content="#3c8dbc">
 </head>
 
+<style>
+    .confirm-delete {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #72afd2;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      width: 300px;
+      border: 2px solid black;
+      border-radius: 10px;
+    }
+  
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  
+    .confirm-btn {
+      background-color: red;
+      color: white;
+    }
+  
+    .cancel-btn {
+      background-color: green;
+      color: white;
+    }
+  </style>
+
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
@@ -51,11 +86,13 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <% results.forEach(function(row){ %>
                                 <tr>
-                                    <td>1.</td>
-                                    <td>contato@hcode.com.br</td>
+                                    <td><%= row.id %></td>
+                                    <td><%= row.email %></td>
                                     <td><button type="button" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Excluir</button></td>
                                 </tr>
+                                <% }); %>
                             </tbody>
                         </table>
                     </div>
@@ -70,7 +107,52 @@
         <!-- Main Footer -->
         <%- include("./inc/footer") -%>
 
+        <div class="confirm-delete" id="confirmDelete">
+            <p id="confirmMessage">Você realmente quer excluir o menu?</p>
+            <button class="confirm-btn" id="confirmYes">Sim</button>
+            <button class="cancel-btn" id="confirmNo">Não</button>
+          </div>
+        </div>
+
     </div>
+
+    <script src="/js/hcode-formsave.js"></script>
+  <script src="/js/hcode-grid.js"></script>
+
+  <script>
+
+    new HcodeGrid({
+      deleteURL: '/admin/emails/${data.id}',
+      deleteMessage: 'Deseja realmente excluir o usuário ${data.emails}?',
+      listeners: {
+          beforeUpdateClick: (e) => {
+            console.log("beforeUpdateClick");
+            $("#modal-update").modal("show");
+          },
+          afterDeleteClick: (e)=>{
+            window.location.reload();
+          },
+          onUpdateLoad: (formUpdate, name, data) => { 
+            let input = formUpdate.querySelector(`[name=${name}]`);
+            if (input && input.type === 'file') { 
+              return;
+            }
+            switch (name) {
+              case "date":
+                if (input)
+                  input.value = moment(data[name]).format("YYYY-MM-DD");
+                break;
+              default:
+                if (input) input.value = data[name];
+            }
+          },
+          buttonClick: (btn, data, e)=>{
+            document.querySelector('#modal-update-password form [name=id]').value = data.id
+            $('#modal-update-password').modal('show')
+          }
+      } 
+    })
+  </script>
 
     <!-- jQuery 3 -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>

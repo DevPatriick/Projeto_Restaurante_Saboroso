@@ -124,8 +124,8 @@
   <script>
 
     new HcodeGrid({
-      deleteURL: '/admin/contacts/${data.id}',
-      deleteMessage: 'Deseja realmente excluir o usuário ${data.name}?',
+      deleteURL: '/admin/emails/${data.id}',
+      deleteMessage: 'Deseja realmente excluir o usuário ${data.email}?',
       listeners: {
           beforeUpdateClick: (e) => {
             console.log("beforeUpdateClick");

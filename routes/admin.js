@@ -10,6 +10,7 @@ var moment = require('moment');
 const { rejects } = require("assert");
 moment.locale("pt-BR")
 var contacts = require('./../inc/contacts')
+var emails = require('./../inc/emails')
 
 router.use(function (req, res, next) {
   if (["/login"].indexOf(req.url) === -1 && !req.session.user) {
@@ -23,6 +24,7 @@ router.use(function (req, res, next) {
   req.menus = admin.getMenus(req);
   next();
 });
+
 
 router.get("/logout", function (req, res, next) {
   delete req.session.user;
@@ -62,14 +64,6 @@ router.post("/login", function (req, res, next) {
         users.render(req, res, false, err.message || err);
       });
   }
-});
-
-
-router.get("/emails", function (req, res, next) {
-  res.render("admin/emails", {
-    menus: req.menus,
-    user: req.session.user,
-  });
 });
 
 router.get("/menus", function (req, res, next) {
@@ -156,6 +150,27 @@ router.get("/contacts", async (req, res, next) => {
 router.delete('/contacts/:id', async (req, res, next) => {
   try {
     const results = await contacts.deleteContacts(req.params.id)
+    res.status(200).send(results)
+
+  } catch (error) {
+    
+  }
+})
+
+router.get("/emails", async (req, res, next) => {
+
+  try {
+    const results = await emails.getEmails()
+    res.render("admin/emails", { menus: req.menus, user: req.session.user, results });
+  } catch (error) {
+    res.status(400).json(error)
+  }
+ 
+});
+
+router.delete('/emails/:id', async (req, res, next) => {
+  try {
+    const results = await emails.deleteEmails(req.params.id)
     res.status(200).send(results)
 
   } catch (error) {

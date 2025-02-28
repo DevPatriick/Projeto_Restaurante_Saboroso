@@ -4,6 +4,7 @@ var connection = require("../inc/db");
 var menus = require("./../inc/menus");
 const Swal = require("sweetalert2");
 const axios = require('axios');
+var emails = require('./../inc/emails')
 
 const reservations = require("./../inc/reservations");
 const contacts = require("./../inc/contacts");
@@ -59,6 +60,16 @@ router.get("/menus", function (req, res, next) {
 router.get("/reservations", function (req, res, next) {
   reservations.render(req, res);
 });
+
+router.post('/subscribe', async (req, res, next)=>{
+ emails.save(req).then(results=>{
+  res.send(results)
+ }).catch(err=>
+  res.send(err)
+ )
+
+
+})
 
 router.post("/reservations", (req, res) => {
   let error = null;
