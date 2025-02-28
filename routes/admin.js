@@ -192,6 +192,16 @@ router.get("/reservations", function (req, res, next) {
   })
 });
 
+router.get('/reservations/chart', function(){
+
+  req.query.start = (req.query.start) ? req.query.start : moment().subtract(1, "year").format('YYYY-MM-DD')
+  req.query.start = (req.query.start) ? req.query.start : moment().format('YYYY-MM-DD')
+
+  reservations.chart(req).then(chartData=>{
+    res.send(chartData)
+  })
+})
+
 router.post("/reservations", async (req, res, next)=>{
   console.log("Campos recebidos:", req.fields); // Verificar os dados
 

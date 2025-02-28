@@ -1,7 +1,8 @@
 // const { fileLoader } = require("ejs");
-const { param } = require("../routes/admin");
+// const { param } = require("../routes/admin");
 var connection = require("./db");
 var Pagination = require("./Pagination")
+var moment = require('moment')
 // const { param } = require("../routes");
 
 module.exports = {
@@ -116,4 +117,32 @@ module.exports = {
     })
    
   },
+
+  chart(req){
+      return new Promise((resolve, reject)=>{
+        connection.query =`
+        SELECT CONCAT(YEAR(date), '-', MONTH(date)) AS date, COUNT(*) AS total, SUM(people) / COUNT(*) AS avg_people
+                FROM tb_reservations
+                WHERE date BETWEEN ? AND ?
+                GROUP BY YEAR(date), MONTH(date)
+                ORDER BY YEAR(date), MONTH(date)
+        `, [req.query.start, req.query.end], 
+        (err, result)=>{
+        if(err){
+          reject(err)
+        } else{
+          let months = [];
+          let values = [];
+
+          result.forEach(row=>{
+            months.push(row.date).format('MMM YYYY')
+            values.push(row.total)
+          })
+        }
+                }
+                resolve({
+                  months, values
+                })
+    })
+  }
 };
