@@ -9,8 +9,7 @@ var formidable = require("formidable");
 var http = require('http');
 var socket = require('socket.io')
 
-var indexRouter = require("./routes/index");
-var adminRouter = require("./routes/admin");
+
 
 var app = express();
 
@@ -19,15 +18,13 @@ var io = socket(http)
 
 io.on('connection', function (socket) {
 
-  console.log('a user connected');
+  console.log('Conectado')
 
-  socket.on('disconnect', function () {
-
-    console.log('user disconnected');
-
-  });
 
 });
+
+var indexRouter = require("./routes/index")(io)
+var adminRouter = require("./routes/admin")(io)
 
 http.listen(3000, ()=>{
 
@@ -54,6 +51,8 @@ http.listen(3000, ()=>{
 // });
 
 app.use("/admin/reservations", function (req, res, next) {
+
+  req.body={}
   if (req.method === "POST") {
     let form = formidable.IncomingForm({
       uploadDir: path.join(__dirname, "/public/images"),
