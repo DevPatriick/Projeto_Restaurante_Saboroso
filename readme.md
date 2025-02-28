@@ -1,6 +1,6 @@
 # 🚀 Projeto Restaurante Saboroso 📱📞🍣🥘
 
-Este projeto é um acompanhamento do progresso no curso **Projeto Restaurante Saboroso 📱📞🍣🥘**, que consiste na criação de um clone do WhatsApp utilizando tecnologias modernas de desenvolvimento web. O curso possui **50 aulas**.
+Este projeto é um acompanhamento do progresso no curso **Projeto Restaurante Saboroso 📱📞🍣🥘**, que consiste na criação de um sistema de gestão de reservas utilizando tecnologias modernas de desenvolvimento web. O curso possui **50 aulas**.
 
 ## 📌 Funcionalidades
 
