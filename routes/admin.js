@@ -9,6 +9,7 @@ var formidable = require("formidable");
 var moment = require('moment');
 const { rejects } = require("assert");
 moment.locale("pt-BR")
+var contacts = require('./../inc/contacts')
 
 router.use(function (req, res, next) {
   if (["/login"].indexOf(req.url) === -1 && !req.session.user) {
@@ -141,9 +142,26 @@ router.delete("/menus/:id", function(req, res, next){
 })
 
 
-router.get("/contacts", function (req, res, next) {
-  res.render("admin/contacts", { menus: req.menus, user: req.session.user });
+router.get("/contacts", async (req, res, next) => {
+
+  try {
+    const results = await contacts.getContacts()
+    res.render("admin/contacts", { menus: req.menus, user: req.session.user, results });
+  } catch (error) {
+    res.status(400).json(error)
+  }
+ 
 });
+
+router.delete('/contacts/:id', async (req, res, next) => {
+  try {
+    const results = await contacts.deleteContacts(req.params.id)
+    res.status(200).send(results)
+
+  } catch (error) {
+    
+  }
+})
 
 router.get("/reservations", function (req, res, next) {
   reservations.getReservations().then((results)=>{

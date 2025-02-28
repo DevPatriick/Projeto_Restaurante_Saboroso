@@ -31,4 +31,35 @@ module.exports = {
       );
     });
   },
+
+  getContacts() {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM tb_contacts ORDER BY register DESC`,
+        (err, results) => {
+          try {
+            resolve(results);
+          } catch (err) {
+            reject(err);
+          }
+        }
+      );
+    });
+  },
+
+  deleteContacts(id) {
+    return new Promise((resolve, reject) => {
+      connection.query(`
+        DELETE FROM tb_contacts
+        WHERE id = ?`, [
+          id
+        ], (err, results)=>{
+          if(err){
+            reject(err)
+          } else{
+            resolve(results)
+          }
+        })
+    });
+  },
 };
