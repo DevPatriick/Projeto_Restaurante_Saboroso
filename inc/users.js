@@ -1,3 +1,4 @@
+// const formidable  = require("formidable/Formidable");
 let connection = require("./db");
 
 module.exports = {
@@ -65,6 +66,31 @@ module.exports = {
         })
     });
   },
+
+  changePassword(req) {
+    return new Promise((resolve, reject) => {
+      if (!req.fields.password) { 
+        return reject("Preencha a senha");
+      }
+      
+      if (req.fields.password !== req.fields.passwordConfirm) { 
+        return reject("As senhas não são iguais");
+      }
+  
+      connection.query(
+        `UPDATE tb_users SET password = ? WHERE id = ?`,
+        [req.fields.password, req.fields.id],
+        (err, results) => { 
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  },
+  
 
   save(fields, files) {
     return new Promise((resolve, reject) => {

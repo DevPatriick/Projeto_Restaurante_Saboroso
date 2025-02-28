@@ -3,8 +3,11 @@ var users = require("../inc/users");
 var router = express.Router();
 var admin = require("./../inc/admin");
 var menus = require("./../inc/menus");
+var path = require("path");
 var reservations = require('./../inc/reservations')
+var formidable = require("formidable");
 var moment = require('moment');
+const { rejects } = require("assert");
 moment.locale("pt-BR")
 
 router.use(function (req, res, next) {
@@ -76,14 +79,57 @@ router.get("/menus", function (req, res, next) {
   
 });
 
-router.post("/menus", function(req, res, next){
-  menus.saver(req.fields, req.files)
-    .then(results => {
-      res.send({ success: true, results: results });
+function parseForm(req){
+
+  const form = formidable.IncomingForm({
+    uploadDir: path.join(__dirname, "../public/images"),
+    keepExtensions: true,
+  });
+
+  return new Promise((resolve, reject) => {
+    form.parse(req, (err, fields, files) => {
+      if (err) {
+        reject(err)
+      }
+
+      resolve({fields, files});
     })
-    .catch(err => {
-      res.status(500).send({ success: false, error: err.message });
-    });
+      
+  })
+}
+
+router.post("/menus", async (req, res, next) => {
+  
+ 
+  const {fields, files} = await parseForm(req);
+
+  req.fields = fields;
+  req.files = files;
+
+  // Object.assign(req, await parseForm(req))
+
+  try {
+    const results = await menus.saver(req.fields, req.files);
+    res.send({ success: true, results: results })
+  } catch (error) {
+    res.status(400).send({ success: false, error: err.message })
+  }
+  
+ 
+  // form.parse(req, function (err, fields, files) {
+  //   req.fields = fields;
+  //   req.files = files;
+  //   menus.saver(req.fields, req.files)
+  //   .then(results => {
+  //     res.send({ success: true, results: results });
+  //   })
+  //   .catch(err => {
+  //     console.log(err) 
+  //     res.status(400).send({ success: false, error: err.message });
+  //   });
+  // });
+
+  
 });
 
 router.delete("/menus/:id", function(req, res, next){
@@ -105,7 +151,7 @@ router.get("/reservations", function (req, res, next) {
   })
 });
 
-router.post("/reservations", function(req, res, next){
+router.post("/reservations", async (req, res, next)=>{
   console.log("Campos recebidos:", req.fields); // Verificar os dados
 
   if (!req.fields) {
@@ -114,29 +160,31 @@ router.post("/reservations", function(req, res, next){
 
   const { name, email, people, date, time, telephone } = req.fields;
 
-  reservations.save(req.fields, req.files)
-    .then(async results => {
-      res.send({ success: true, results: results });
+  try {
+    const results = await reservations.save(req.fields, req.files)
+    res.send({ success: true, results: results });
 
-      try {
-        await axios.post("https://api.z-api.io/instances/3DD3AC72A71C20CC0F4E9A31D728A9CF/token/1CDEB9060DC27A5935FBB492/send-text", {
-          "phone": `+55${telephone}`,
-          "message": `Olá ${name}, tudo bem? 😊.
-          Sua reserva para o dia ${date} às ${time} foi CONFIRMADA. ✅
-          Te aguardamos! 🕒🍽️`
-        }, {
-          headers: {
-            "Content-Type": "application/json",
-            "client-token": "F8ce8594579e94de2b8d2899369be25dbS"
-          }
-        });
-      } catch (error) {
-        console.error("Erro ao enviar mensagem:", error);
-      }
-    })
-    .catch(err => {
-      res.status(500).send({ success: false, error: err.message });
-    });
+    try {
+      await axios.post("https://api.z-api.io/instances/3DD3AC72A71C20CC0F4E9A31D728A9CF/token/1CDEB9060DC27A5935FBB492/send-text", {
+        "phone": `+55${telephone}`,
+        "message": `Olá ${name}, tudo bem? 😊.
+        Sua reserva para o dia ${date} às ${time} foi CONFIRMADA. ✅
+        Te aguardamos! 🕒🍽️`
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+          "client-token": "F8ce8594579e94de2b8d2899369be25dbS"
+        }
+      });
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+    }
+  } catch (error) {
+    res.status(500).send({ success: false, error: err.message });
+  }
+ 
+
+  
 });
 
 
@@ -155,21 +203,33 @@ router.get("/users", function (req, res, next) {
   
 });
 
-router.post("/users", function (req, res, next) {
-  users.save(req.fields).then(results =>{
+router.post("/users", async (req, res, next) => {
+
+  try {
+    const results = await users.save(req.fields);
     res.send(results)
+  } catch (error) {
+    res.send(error)
   }
-  ).catch(err=>{
-    res.send(err)
-  })
+ 
 });
 
-router.delete("/users/:id", function (req, res, next) {
+router.post('/users/password-change', async(req, res, next)=>{
+
+  try {
+    const results = await users.changePassword(req);
+    res.status(200).send(results)
+  } catch (err) {
+    res.status(400).send({error: err})
+  }
+})
+
+router.delete("/users/:id", function(req, res, next){
   users.delete(req.params.id).then(results=>{
     res.send(results)
   }).catch(err=>{
     res.send(err)
   })
-});
+})
 
 module.exports = router;
