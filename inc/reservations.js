@@ -1,5 +1,6 @@
 // const { fileLoader } = require("ejs");
 var connection = require("./db");
+var Pagination = require("./Pagination")
 // const { param } = require("../routes");
 
 module.exports = {
@@ -31,19 +32,16 @@ module.exports = {
     });
   },
 
-  getReservations() {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT * FROM tb_reservations ORDER BY date DESC`,
-        (err, results) => {
-          try {
-            resolve(results);
-          } catch (err) {
-            reject(err);
-          }
-        }
-      );
-    });
+  getReservations(page) {
+
+    if(!page) page = 1;
+
+    let pag = new Pagination(
+      `SELECT SQL_CALC_FOUND_ROWS * FROM tb_reservations ORDER BY name LIMIT ?, ?`,
+      [], 10
+
+    )
+    return pag.getPage(page)
   },
 
   save(fields) {

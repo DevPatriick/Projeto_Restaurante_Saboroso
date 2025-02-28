@@ -7,7 +7,7 @@ var path = require("path");
 var reservations = require('./../inc/reservations')
 var formidable = require("formidable");
 var moment = require('moment');
-const { rejects } = require("assert");
+// const { rejects } = require("assert");
 moment.locale("pt-BR")
 var contacts = require('./../inc/contacts')
 var emails = require('./../inc/emails')

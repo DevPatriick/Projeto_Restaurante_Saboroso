@@ -35,27 +35,27 @@ module.exports = {
         });
       },
 
-      save(req) {
-        return new Promise((resolve, reject) => {
-          if (!req.fields.email) {
-            console.log("Email:", req.fields.email);
-            reject('Preencha o e-mail corretamente');
-          } else {
-            connection.query(
-              `
-              INSERT INTO tb_emails (email) VALUES (?)
-              `,
-              [req.fields.email],
-              (err, results) => {
-                if (err) {
-                  reject(err.message);
-                } else {
-                  resolve(results);
-                }
-              }
-            );
-          }
-        });
-      }
+      // save(req) {
+      //   return new Promise((resolve, reject) => {
+      //     if (!req.fields.email) {
+      //       console.log("Email:", req.fields.email);
+      //       reject('Preencha o e-mail corretamente');
+      //     } else {
+      //       connection.query(
+      //         `
+      //         INSERT INTO tb_emails (email) VALUES (?)
+      //         `,
+      //         [req.fields.email],
+      //         (err, results) => {
+      //           if (err) {
+      //             reject(err.message);
+      //           } else {
+      //             resolve(results);
+      //           }
+      //         }
+      //       );
+      //     }
+      //   });
+      // }
       
 }

@@ -85,8 +85,8 @@
               <h3 class="box-title">Lista</h3>
               <a
                 href="#"
-                class="btn btn-xs pull-right btn-success"
-                ><i class="fa fa-plus"></i> Novo</a
+                class="btn btn-xs pull-right btn-success" data-toggle="modal" e o data-target="#modal-create"
+                ><i class="fa fa-plus" ></i> Novo</a
               >
             </div>
             <div class="box-header" style="height: 44px">
@@ -382,18 +382,21 @@
 
       <%- include("./inc/footer") -%>
     </div>
-
+    <script src="/js/hcode-grid.js"></script>
     <script src="/js/hcode-formsave.js"></script>
     <script src="/js/moment.min.js"></script>
-    <script src="/js/hcode-grid.js"></script>
+    
     <script>
 
       new HcodeGrid({
          deleteURL: '/admin/reservations/${data.id}',
          deleteMessage: 'Você realmente quer excluir a reserva de ${data.name}?',
          listeners: {
+          afterFormCreate: (e)=>{
+            window.location.reload();
+          },
           beforeUpdateClick: (e)=>{
-            // $("#modal-update").modal("show");
+            $("#modal-update").modal("show");
           },
           afterDeleteClick: (e)=>{
             window.location.reload();
