@@ -6,12 +6,34 @@ var logger = require("morgan");
 var session = require("express-session");
 var RedisStore = require("connect-redis")(session);
 var formidable = require("formidable");
+var http = require('http');
+var socket = require('socket.io')
 
 var indexRouter = require("./routes/index");
 var adminRouter = require("./routes/admin");
 
 var app = express();
 
+var http = http.Server(app)
+var io = socket(http)
+
+io.on('connection', function (socket) {
+
+  console.log('a user connected');
+
+  socket.on('disconnect', function () {
+
+    console.log('user disconnected');
+
+  });
+
+});
+
+http.listen(3000, ()=>{
+
+  console.log('Servidor em execução...');
+
+});
 
 
 // app.use("/admin/menus", function (req, res, next) {
@@ -89,7 +111,6 @@ app.use(
   })
 );
 app.use(logger("dev"));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
